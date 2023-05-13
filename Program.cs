@@ -42,34 +42,61 @@
             }
         }
 
+        static bool ToutesLettresDevinees(string mot, List<char> lettres) 
+        {
+
+            mot = mot.Replace(lettres[0].ToString(), "");
+
+            if (mot.Length == 0)
+            {
+                return true;
+            }
+            else { return false; }
+        }
+
+
+
 
         static void DevinerMot(string mot)
         {
             List<char> lettres = new List<char>();
+            const int NB_VIES = 6;
+            int viesRestantes = NB_VIES;
 
-            while (true)
+            while (viesRestantes>0)
             {
                 AfficherMot(mot, new List<char>(lettres));
                 Console.WriteLine();
                 char lettre = DemanderUneLettre();
                 lettres.Add(lettre);
+                ToutesLettresDevinees(mot, lettres);
+
                 Console.Clear();
 
                 if (mot.Contains(lettre))
                 {
                     Console.WriteLine("Cette lettre est dans le mot.");
+
                 }
                 else
                 {
                     Console.WriteLine("Cette lettre n'est pas dans le mot");
+                    viesRestantes--;
+                    Console.WriteLine("Il vous reste " + viesRestantes + " essais.");
                 }
 
+                Console.WriteLine();
                 Console.Write("Lettres testées : ");
                 for (int i = 0; i < lettres.Count; i++)
                 {
                     Console.Write(lettres[i] + " ");
                 }
                 Console.WriteLine();
+            }
+            if (viesRestantes == 0)
+            {
+                Console.WriteLine("Vous n'avez plus d'essais disponibles, vous avez perdu !");
+                Console.WriteLine("Le bon mot était " + mot + ".");
             }
         }
 
