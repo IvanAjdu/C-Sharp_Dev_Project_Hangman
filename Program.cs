@@ -5,7 +5,6 @@
 
         static void AfficherMot(string mot, List<char> lettres)
         {
-            // _ _ _ _ _ _ _ _ 
             for (int i = 0; i < mot.Length; i++)
             {
                 char lettre = mot[i];
@@ -13,26 +12,71 @@
                 {
                     Console.Write(lettre + " ");
                 }
-                else { Console.Write("_ "); }
+                else
+                {
+                    Console.Write("_ ");
+                }
+
             }
             Console.WriteLine();
         }
 
-        /*static void DevinerMot(string mot)
+        static char DemanderUneLettre()
         {
-            /// _ _ _ _ _ _ _ _
-            /// E _ E _ _ _ _ _
-            AfficherMot(mot);
-            // DemanderLettre();
-        }*/
+            while (true)
+            {
+                Console.Write("Choisisez une lettre : ");
+                string reponse = Console.ReadLine();
+                if (reponse.Length == 1)
+                {
+                    reponse = reponse.ToUpper();
 
+                    return reponse[0];
+                }
+                else
+                {
+                    Console.WriteLine("Veuillez saisir une lettre");
+
+                }
+                Console.WriteLine();
+            }
+        }
+
+
+        static void DevinerMot(string mot)
+        {
+            List<char> lettres = new List<char>();
+
+            while (true)
+            {
+                char lettre = DemanderUneLettre();
+                lettres.Add(lettre);
+
+
+                if (mot.Contains(lettre))
+                {
+                    Console.WriteLine("Cette lettre est dans le mot.");
+                }
+                else
+                {
+                    Console.WriteLine("Cette lettre n'est pas dans le mot");
+                }
+                AfficherMot(mot, new List<char>(lettres));
+                Console.WriteLine();
+
+                Console.Write("Lettres testées : ");
+                for (int i = 0; i < lettres.Count; i++)
+                {
+                    Console.Write(lettres[i] + " ");
+                }
+                Console.WriteLine();
+            }
+        }
 
         static void Main(string[] args)
         {
             string mot = "ELEPHANT";
-
-            //DevinerMot(mot);
-            AfficherMot(mot, new List<char> { 'E', 'L', 'A'});
+            DevinerMot(mot);
         }
     }
 }
