@@ -49,9 +49,11 @@
 
             while (true)
             {
+                AfficherMot(mot, new List<char>(lettres));
+                Console.WriteLine();
                 char lettre = DemanderUneLettre();
                 lettres.Add(lettre);
-
+                Console.Clear();
 
                 if (mot.Contains(lettre))
                 {
@@ -61,8 +63,6 @@
                 {
                     Console.WriteLine("Cette lettre n'est pas dans le mot");
                 }
-                AfficherMot(mot, new List<char>(lettres));
-                Console.WriteLine();
 
                 Console.Write("Lettres testées : ");
                 for (int i = 0; i < lettres.Count; i++)
