@@ -3,12 +3,12 @@
     internal class Program
     {
 
-        static void AfficherMot(string mot, List<char> lettres)
+        static void AfficherMot(string mot, List<char> lettresDevinees)
         {
             for (int i = 0; i < mot.Length; i++)
             {
                 char lettre = mot[i];
-                if (lettres.Contains(lettre))
+                if (lettresDevinees.Contains(lettre))
                 {
                     Console.Write(lettre + " ");
                 }
@@ -42,24 +42,20 @@
             }
         }
 
-        static bool ToutesLettresDevinees(string mot, List<char> lettres) 
+        /static int ToutesLettresDevinees(string lettresRestantes, List<char> lettres) 
         {
-
-            mot = mot.Replace(lettres[0].ToString(), "");
-
-            if (mot.Length == 0)
+            int longueurMot = lettresRestantes.Length;
+            for (int i = longueurMot; i>0; i--)
             {
-                return true;
+                lettresRestantes = lettresRestantes.Replace(lettres[0].ToString(), "");
             }
-            else { return false; }
+            return lettresRestantes.Length;
         }
-
-
-
 
         static void DevinerMot(string mot)
         {
             List<char> lettres = new List<char>();
+            List<char> lettresDevinees = new List<char>();
             const int NB_VIES = 6;
             int viesRestantes = NB_VIES;
 
@@ -69,14 +65,18 @@
                 Console.WriteLine();
                 char lettre = DemanderUneLettre();
                 lettres.Add(lettre);
-                ToutesLettresDevinees(mot, lettres);
+                int condOk = ToutesLettresDevinees(mot, lettresDevinees);
 
                 Console.Clear();
 
                 if (mot.Contains(lettre))
                 {
                     Console.WriteLine("Cette lettre est dans le mot.");
-
+                    lettresDevinees.Add(lettre);
+                    if (condOk == 0)
+                    {
+                        break;
+                    }
                 }
                 else
                 {
@@ -98,6 +98,7 @@
                 Console.WriteLine("Vous n'avez plus d'essais disponibles, vous avez perdu !");
                 Console.WriteLine("Le bon mot était " + mot + ".");
             }
+            else { Console.WriteLine("Félicitations ! Vous avez trouvé le mot !"); }
         }
 
         static void Main(string[] args)
