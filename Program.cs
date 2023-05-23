@@ -1,4 +1,6 @@
-﻿namespace Jeu_Du_Pendu
+﻿using AsciiArt;
+
+namespace Jeu_Du_Pendu
 {
     internal class Program
     {
@@ -49,8 +51,6 @@
                 mot = mot.Replace(lettre.ToString(), "");
             }
 
-            Console.WriteLine(mot);
-
             if (mot.Length == 0)
             {
                 return true;
@@ -62,11 +62,16 @@
         {
             List<char> lettres = new List<char>();
             List<char> lettresDevinees = new List<char>();
+            List<char> lettreTestees = new List<char>();
             const int NB_VIES = 6;
             int viesRestantes = NB_VIES;
 
+
             while (viesRestantes>0)
             {
+                int penduShow = 6 - viesRestantes;
+                Console.WriteLine(Ascii.PENDU[penduShow]);
+                Console.WriteLine();
                 AfficherMot(mot, new List<char>(lettres));
                 Console.WriteLine();
                 char lettre = DemanderUneLettre();
@@ -85,26 +90,33 @@
                 }
                 else
                 {
-                    Console.WriteLine("Cette lettre n'est pas dans le mot");
+                    lettreTestees.Add(lettre);
                     viesRestantes--;
+                    Console.WriteLine("Cette lettre n'est pas dans le mot.");
                     Console.WriteLine("Il vous reste " + viesRestantes + " essais.");
                 }
 
                 Console.WriteLine();
-                Console.Write("Lettres testées : ");
-                for (int i = 0; i < lettres.Count; i++)
+                if (lettreTestees.Count > 0)
                 {
-                    Console.Write(lettres[i] + " ");
+                    Console.Write("Autre(s) Lettre(s) : " + string.Join(", ", lettreTestees));
+                    Console.WriteLine();
                 }
-                Console.WriteLine();
             }
 
             if (viesRestantes == 0)
             {
+                Console.WriteLine(Ascii.PENDU[6]);
+                Console.WriteLine();
                 Console.WriteLine("Vous n'avez plus d'essais disponibles, vous avez perdu !");
                 Console.WriteLine("Le bon mot était " + mot + ".");
             }
-            else { Console.WriteLine("Félicitations ! Vous avez trouvé le mot !"); }
+            else 
+            {
+                Console.WriteLine("Félicitations ! Vous avez trouvé le mot en entier !");
+                Console.WriteLine("Le mot était " + mot + ".");
+            }
+
         }
 
         static void Main(string[] args)
