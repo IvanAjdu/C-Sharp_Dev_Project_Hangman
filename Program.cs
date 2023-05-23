@@ -32,19 +32,17 @@ namespace Jeu_Du_Pendu
                 if (reponse.Length == 1)
                 {
                     reponse = reponse.ToUpper();
-
                     return reponse[0];
                 }
                 else
                 {
-                    Console.WriteLine("Veuillez saisir une lettre");
-
+                    Console.WriteLine("Veuillez saisir une nouvelle lettre");
                 }
                 Console.WriteLine();
             }
         }
 
-        static bool winCondition(string mot, List<char> lettres)
+        static bool WinCondition(string mot, List<char> lettres)
         {
             foreach (var lettre in lettres)
             {
@@ -69,8 +67,7 @@ namespace Jeu_Du_Pendu
 
             while (viesRestantes>0)
             {
-                int penduShow = 6 - viesRestantes;
-                Console.WriteLine(Ascii.PENDU[penduShow]);
+                Console.WriteLine(Ascii.PENDU[NB_VIES - viesRestantes]);
                 Console.WriteLine();
                 AfficherMot(mot, new List<char>(lettres));
                 Console.WriteLine();
@@ -83,17 +80,21 @@ namespace Jeu_Du_Pendu
                 {
                     Console.WriteLine("Cette lettre est dans le mot.");
                     lettresDevinees.Add(lettre);
-                    if (winCondition(mot, lettres))
+                    if (WinCondition(mot, lettres))
                     {
                         break;
                     }
                 }
-                else
+                else 
                 {
-                    lettreTestees.Add(lettre);
-                    viesRestantes--;
-                    Console.WriteLine("Cette lettre n'est pas dans le mot.");
-                    Console.WriteLine("Il vous reste " + viesRestantes + " essais.");
+                    if (!lettreTestees.Contains(lettre))
+                    {
+                        lettreTestees.Add(lettre);
+                        viesRestantes--;
+                        Console.WriteLine("Cette lettre n'est pas dans le mot.");
+                        Console.WriteLine("Il vous reste " + viesRestantes + " essais.");
+                    }
+                    else { Console.WriteLine("Vous avez déjà essayé cette lettre."); }
                 }
 
                 Console.WriteLine();
@@ -104,9 +105,10 @@ namespace Jeu_Du_Pendu
                 }
             }
 
+            Console.WriteLine(Ascii.PENDU[NB_VIES - viesRestantes]);
+
             if (viesRestantes == 0)
             {
-                Console.WriteLine(Ascii.PENDU[6]);
                 Console.WriteLine();
                 Console.WriteLine("Vous n'avez plus d'essais disponibles, vous avez perdu !");
                 Console.WriteLine("Le bon mot était " + mot + ".");
@@ -116,13 +118,71 @@ namespace Jeu_Du_Pendu
                 Console.WriteLine("Félicitations ! Vous avez trouvé le mot en entier !");
                 Console.WriteLine("Le mot était " + mot + ".");
             }
+            Console.WriteLine();
+        }
 
+        static string[] ChargerLesMots(string nomFichier)
+        {
+            try
+            {
+                return File.ReadAllLines(nomFichier);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur de lecture du fichier : " + nomFichier + ex.Message);
+            }
+            return null;
+
+        }
+
+        static bool Rejouer()
+        {
+            while (true)
+            {
+                Console.WriteLine("Voulez-vous rejouer ? O/N");
+                string choix = DemanderUneLettre().ToString();
+                if (choix == "O")
+                {
+                    Console.Clear();
+                    return true;
+                }
+                else if (choix == "N")
+                {
+                    return false;
+                }
+                else
+                {
+                    Console.WriteLine("Veuillez répondre par O pour Oui, ou N pour Non.");
+                    Console.WriteLine();
+                    return Rejouer();
+                }
+            }
         }
 
         static void Main(string[] args)
         {
-            string mot = "ELEPHANT";
-            DevinerMot(mot);
+            bool jouer = true;
+            while (jouer == true)
+            {
+                string[] mots = ChargerLesMots("mots.txt");
+
+                if ((mots == null) || (mots.Length == 0))
+                {
+                    Console.WriteLine("Erreur : la liste est vide.");
+                }
+                else
+                {
+                    Random rand = new Random();
+                    string mot = mots[rand.Next(mots.Length)].Trim().ToUpper();
+                    DevinerMot(mot);
+                    if (!Rejouer())
+                    {
+                        break;
+                    }
+                }
+            }
+            Console.WriteLine();
+            Console.WriteLine("Merci, à bientôt !");
         }
     }
 }
