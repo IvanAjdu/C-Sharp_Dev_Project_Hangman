@@ -42,14 +42,20 @@
             }
         }
 
-        /static int ToutesLettresDevinees(string lettresRestantes, List<char> lettres) 
+        static bool winCondition(string mot, List<char> lettres)
         {
-            int longueurMot = lettresRestantes.Length;
-            for (int i = longueurMot; i>0; i--)
+            foreach (var lettre in lettres)
             {
-                lettresRestantes = lettresRestantes.Replace(lettres[0].ToString(), "");
+                mot = mot.Replace(lettre.ToString(), "");
             }
-            return lettresRestantes.Length;
+
+            Console.WriteLine(mot);
+
+            if (mot.Length == 0)
+            {
+                return true;
+            }
+            return false;
         }
 
         static void DevinerMot(string mot)
@@ -65,7 +71,6 @@
                 Console.WriteLine();
                 char lettre = DemanderUneLettre();
                 lettres.Add(lettre);
-                int condOk = ToutesLettresDevinees(mot, lettresDevinees);
 
                 Console.Clear();
 
@@ -73,7 +78,7 @@
                 {
                     Console.WriteLine("Cette lettre est dans le mot.");
                     lettresDevinees.Add(lettre);
-                    if (condOk == 0)
+                    if (winCondition(mot, lettres))
                     {
                         break;
                     }
@@ -93,6 +98,7 @@
                 }
                 Console.WriteLine();
             }
+
             if (viesRestantes == 0)
             {
                 Console.WriteLine("Vous n'avez plus d'essais disponibles, vous avez perdu !");
